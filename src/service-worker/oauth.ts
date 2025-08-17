@@ -6,8 +6,8 @@ type OauthMessage = {
   provider: OauthProviders;
 };
 
-function getAuthToken(): Promise<string> {
-  console.log(chrome);
+export function getAuthToken(): Promise<string> {
+  console.log("getAuthToken exec....");
   return new Promise((resolve, reject) => {
     chrome.identity.getAuthToken({ interactive: true }, (token) => {
       if (chrome.runtime.lastError) {
@@ -22,7 +22,10 @@ function getAuthToken(): Promise<string> {
 
 function removeCachedAuthToken(token: string): Promise<void> {
   return new Promise((resolve) => {
-    chrome.identity.removeCachedAuthToken({ token }, () => resolve());
+    chrome.identity.removeCachedAuthToken({ token }, async () => {
+      await chrome.identity.clearAllCachedAuthTokens();
+      return resolve();
+    });
   });
 }
 
@@ -37,6 +40,7 @@ async function fetchGoogleUserinfo(token: string) {
 chrome.runtime.onMessage.addListener(
   (msg: OauthMessage, _sender, sendResponse) => {
     (async () => {
+      console.log({ msg });
       try {
         if (msg.type === "signin") {
           const token = await getAuthToken();

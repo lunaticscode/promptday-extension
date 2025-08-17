@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hw-rui/calendar": "^0.1.5",
+    "@hw-rui/core": "^0.1.5",
+    "@hw-rui/tabs": "^0.1.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

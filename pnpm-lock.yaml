@@ -8,6 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@hw-rui/calendar':
+        specifier: ^0.1.5
+        version: 0.1.5
+      '@hw-rui/core':
+        specifier: ^0.1.5
+        version: 0.1.5
+      '@hw-rui/tabs':
+        specifier: ^0.1.5
+        version: 0.1.5
       react:
         specifier: ^19.1.0
         version: 19.1.1
@@ -290,6 +299,15 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@hw-rui/calendar@0.1.5':
+    resolution: {integrity: sha512-svYjXLTJ0qQ6AtN2L4MztavHm1Kyu702qeQJqukc+KS8fo0JuiScFq80mMrJWrnOdbwKC1n0DQxUTObbtJTBpg==}
+
+  '@hw-rui/core@0.1.5':
+    resolution: {integrity: sha512-LUi1ykOA1RsdR7/sCbJtgGLmpdQ/YLu8Huli2fiqai0DrTRXNHr1GdOYiKfYGqVauNcWJZ/Vqpw1sDrm5Ze/Jg==}
+
+  '@hw-rui/tabs@0.1.5':
+    resolution: {integrity: sha512-FdUqxY1r44nmH7du4vS66hGGHzWH4AFKwPphBXCJIb99iafqQx/mWL560VXh9vwWOAOYIW0BoWMhpKPuFXsBDQ==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -1097,6 +1115,16 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.9':
     optional: true
+
+  '@hw-rui/calendar@0.1.5':
+    dependencies:
+      '@hw-rui/core': 0.1.5
+
+  '@hw-rui/core@0.1.5': {}
+
+  '@hw-rui/tabs@0.1.5':
+    dependencies:
+      '@hw-rui/core': 0.1.5
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
