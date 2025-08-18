@@ -1,8 +1,9 @@
 // https://rui.hw-lab.site/components/tabs/#usage
+import { OauthProviders } from "@/types/oauth.type";
 import Tabs from "@hw-rui/tabs";
 import { FC, PropsWithChildren } from "react";
 
-export type CalendarProviders = "google" | "ms";
+export type CalendarProviders = OauthProviders;
 
 interface CalendarProviderTabItemProps extends PropsWithChildren {
   value: CalendarProviders;

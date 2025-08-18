@@ -1,12 +1,14 @@
 import Logo from "@/assets/crx.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import ContentContainer from "./ContentContainer";
 
 function App() {
   const [show, setShow] = useState(false);
   const toggle = () => setShow(!show);
-
+  useEffect(() => {
+    console.log("App Mounted");
+  }, []);
   return (
     <div className="popup-container">
       {show && (

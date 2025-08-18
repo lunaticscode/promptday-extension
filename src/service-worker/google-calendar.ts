@@ -1,35 +1,17 @@
 import { AppError, handleError } from "@/utils/error";
 import { getAuthToken } from "./oauth";
+import { OauthProviders } from "@/types/oauth.type";
 
+type CalendarMessageTypes = "calendar-list" | "get" | "insert";
+type CalendarMessage = {
+  type: CalendarMessageTypes;
+  provider: OauthProviders;
+};
 const GOOGLE_CALENDAR_API_BASE_URL = "https://www.googleapis.com/calendar/v3";
 
-// async function calendarFetch<T>(
-//   url: string,
-//   token: string,
-//   init?: RequestInit
-// ): Promise<T> {
-//   const res = await fetch(url, {
-//     ...init,
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       "Content-Type": "application/json",
-//       ...(init?.headers || {}),
-//     },
-//   });
-//   if (res.status === 401) {
-//     // TODO: 토큰 갱신 로직(필요 시) -> ensureValidToken 개선
-//     throw new Error("Unauthorized (401). Access token may be expired.");
-//   }
-//   if (!res.ok) {
-//     const text = await res.text();
-//     throw new Error(`Google API Error ${res.status}: ${text}`);
-//   }
-//   return res.json() as Promise<T>;
-// }
-
-const getCalendarList = async () => {
+const getCalendarListFromGoogle = async () => {
+  console.log("getCalendarListFromGoogle");
   try {
-    console.log(chrome);
     const token = await getAuthToken();
     const request = await fetch(
       `${GOOGLE_CALENDAR_API_BASE_URL}/users/me/calendarList`,
@@ -40,10 +22,8 @@ const getCalendarList = async () => {
         },
       }
     );
-    const { ok, json } = request;
-    if (ok) {
-      const response = await json();
-      console.log({ response });
+    if (request.ok) {
+      const response = await request.json();
       return response;
     } else {
       throw new AppError("api", "getCalendarList error");
@@ -53,4 +33,38 @@ const getCalendarList = async () => {
   }
 };
 
-export { getCalendarList };
+chrome.runtime.onMessage.addListener(
+  (msg: CalendarMessage, _sender, sendResponse) => {
+    (async () => {
+      try {
+        if (msg.type === "calendar-list") {
+          const provider = msg.provider;
+          console.log("calendar-list event response...");
+          if (provider === "google") {
+            const calendarList = await getCalendarListFromGoogle();
+            sendResponse({ data: calendarList });
+            return;
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        sendResponse({ data: null, isError: true });
+      }
+    })();
+    return true;
+  }
+);
+
+// sender
+export const getCalendarList = async (provider: OauthProviders) => {
+  const response = await chrome.runtime.sendMessage({
+    type: "calendar-list",
+    provider,
+  });
+  const { data } = response;
+  if (data && data.items && data.items.length) {
+    return data.items;
+  } else {
+    return null;
+  }
+};

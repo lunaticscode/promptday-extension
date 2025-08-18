@@ -19,6 +19,7 @@ export default defineManifest({
     default_popup: "src/popup/index.html",
   },
   permissions: ["sidePanel", "contentSettings", "identity", "identity.email"],
+  host_permissions: ["https://www.googleapis.com/*"],
   oauth2: {
     client_id:
       "116195706194-etcjp3qck6tqepmnpheulav7ojufau2f.apps.googleusercontent.com",
@@ -27,6 +28,7 @@ export default defineManifest({
       "email",
       "profile",
       "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/calendar",
     ],
   },
   content_scripts: [

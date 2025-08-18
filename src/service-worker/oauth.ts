@@ -1,5 +1,6 @@
+import { OauthProviders } from "@/types/oauth.type";
+
 type OauthMessageTypes = "signin" | "get_profile" | "signout";
-type OauthProviders = "google";
 
 type OauthMessage = {
   type: OauthMessageTypes;
@@ -7,7 +8,6 @@ type OauthMessage = {
 };
 
 export function getAuthToken(): Promise<string> {
-  console.log("getAuthToken exec....");
   return new Promise((resolve, reject) => {
     chrome.identity.getAuthToken({ interactive: true }, (token) => {
       if (chrome.runtime.lastError) {
@@ -40,7 +40,6 @@ async function fetchGoogleUserinfo(token: string) {
 chrome.runtime.onMessage.addListener(
   (msg: OauthMessage, _sender, sendResponse) => {
     (async () => {
-      console.log({ msg });
       try {
         if (msg.type === "signin") {
           const token = await getAuthToken();
@@ -76,13 +75,11 @@ chrome.runtime.onMessage.addListener(
 );
 
 const oauthSignin = async (provider: OauthProviders) => {
-  console.log({ provider });
   const signinResult = await chrome.runtime.sendMessage({
     type: "get_profile",
     provider,
   });
-
-  console.log(signinResult);
+  return signinResult;
 };
 
 const oauthSignout = async (provider: OauthProviders) => {
@@ -90,6 +87,7 @@ const oauthSignout = async (provider: OauthProviders) => {
     type: "signout",
     provider,
   });
+  return signoutResult;
 };
 
 export { oauthSignin, oauthSignout };
