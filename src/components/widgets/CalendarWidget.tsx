@@ -3,8 +3,13 @@ import CalendarContent from "../features/calendar/CalendarContent";
 import CalendarProviderTabs, {
   CalendarProviders,
 } from "../features/calendar/CalendarProviderTabs";
-import { getCalendarList } from "@/service-worker/google-calendar";
+import {
+  getCalendarEvents,
+  getCalendarList,
+} from "@/service-worker/google-calendar";
 
+const DEMO_CALENDAR_EVENT_ID =
+  "c_3de1dc4a4ee57bbac186b652a8ee2bb1d105ebf3cc3cc77bda85c5505ba1f848@group.calendar.google.com";
 const DEFAULT_PROVIDER = "google";
 type CalendarListMap = Record<CalendarProviders, any[]>;
 const DEFAULT_CALENDAR_LIST_MAP: CalendarListMap = { google: [], ms: [] };
@@ -34,6 +39,11 @@ const CalendarWidget = () => {
 
   return (
     <>
+      <button
+        onClick={() => getCalendarEvents("google", DEMO_CALENDAR_EVENT_ID)}
+      >
+        get-events
+      </button>
       <CalendarProviderTabs
         onChangeTabItem={(_provider) => setProvider(_provider)}
       >

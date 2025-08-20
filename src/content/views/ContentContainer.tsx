@@ -1,10 +1,11 @@
 import CalendarWidget from "@/components/widgets/CalendarWidget";
-import OauthWidget from "@/components/widgets/OauthWidget";
+import PromptWidget from "@/components/widgets/PromptWidget";
 
 const ContentContainer = () => {
   return (
     <>
-      <OauthWidget />
+      {/* <OauthWidget /> */}
+      <PromptWidget />
       <CalendarWidget />
     </>
   );

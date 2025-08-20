@@ -18,7 +18,14 @@ export default defineManifest({
     },
     default_popup: "src/popup/index.html",
   },
-  permissions: ["sidePanel", "contentSettings", "identity", "identity.email"],
+  permissions: [
+    "sidePanel",
+    "contextMenus",
+    "contentSettings",
+    "identity",
+    "storage",
+    "identity.email",
+  ],
   host_permissions: ["https://www.googleapis.com/*"],
   oauth2: {
     client_id:
@@ -38,7 +45,8 @@ export default defineManifest({
     },
   ],
   background: {
-    service_worker: "src/service-worker/index.js",
+    service_worker: "src/service-worker/index.ts",
+    type: "module",
   },
   side_panel: {
     default_path: "src/sidepanel/index.html",

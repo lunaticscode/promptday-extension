@@ -1,6 +1,6 @@
 import { OauthProviders } from "@/types/oauth.type";
 
-type OauthMessageTypes = "signin" | "get_profile" | "signout";
+type OauthMessageTypes = "signin" | "get_profile" | "signout" | "auth-status";
 
 type OauthMessage = {
   type: OauthMessageTypes;
@@ -20,13 +20,27 @@ export function getAuthToken(): Promise<string> {
   });
 }
 
-function removeCachedAuthToken(token: string): Promise<void> {
-  return new Promise((resolve) => {
-    chrome.identity.removeCachedAuthToken({ token }, async () => {
-      await chrome.identity.clearAllCachedAuthTokens();
-      return resolve();
-    });
+// function removeCachedAuthToken(token: string): Promise<void> {
+//   return new Promise((resolve) => {
+//     chrome.identity.removeCachedAuthToken({ token }, async () => {
+//       console.log({ token });
+//       return resolve();
+//     });
+//   });
+// }
+async function getSavedProfileData() {
+  return await new Promise((resolve) => {
+    return chrome.storage.local
+      .get("profile")
+      .then((profile) => {
+        return resolve(profile);
+      })
+      .catch(() => resolve(null));
   });
+}
+
+async function clearAllCachedTokens(): Promise<void> {
+  await chrome.identity.clearAllCachedAuthTokens();
 }
 
 async function fetchGoogleUserinfo(token: string) {
@@ -41,6 +55,14 @@ chrome.runtime.onMessage.addListener(
   (msg: OauthMessage, _sender, sendResponse) => {
     (async () => {
       try {
+        if (msg.type === "auth-status") {
+          const profile = await getSavedProfileData();
+          if (profile && Object.keys(profile).length) {
+            return sendResponse({ ok: true, profile });
+          }
+          return sendResponse({ ok: false, profile: null });
+        }
+
         if (msg.type === "signin") {
           const token = await getAuthToken();
           sendResponse({ ok: true, token });
@@ -50,14 +72,17 @@ chrome.runtime.onMessage.addListener(
         if (msg.type === "get_profile") {
           const token = await getAuthToken(); // 필요 시 자동 갱신/발급
           const profile = await fetchGoogleUserinfo(token);
+          await chrome.storage.local.set({
+            profile,
+          });
           sendResponse({ ok: true, profile });
           return;
         }
 
         if (msg.type === "signout") {
           // 캐시 토큰 제거 (강제 재로그인 유도용)
-          const token = await getAuthToken().catch(() => undefined);
-          if (token) await removeCachedAuthToken(token);
+          await clearAllCachedTokens();
+          await chrome.storage.local.remove(["profile"]);
           sendResponse({ ok: true, loggedOut: true });
           return;
         }
