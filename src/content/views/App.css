@@ -1,3 +1,18 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  /* color: rgba(255, 255, 255, 0.87); */
+  /* background-color: #242424; */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .popup-container {
   position: fixed;
   right: 0;
@@ -15,7 +30,6 @@
   background-color: white;
   color: #1f2937;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   width: max-content;
   height: min-content;
   padding: 0.5rem 1rem;
@@ -23,6 +37,7 @@
   transition: opacity 300ms;
   width: 500px;
   height: 500px;
+  box-shadow: 0px 0px 3px #1f2937;
 }
 
 .toggle-button {
@@ -65,4 +80,35 @@
   height: 40px;
   font-weight: bold;
   cursor: pointer;
+  background-color: #1e6aa3;
+  color: white;
+  border-radius: 0.5rem;
+}
+.prompt-submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.content-profile {
+  display: flex;
+  justify-content: right;
+  column-gap: 5px;
+  align-items: center;
+  width: (100% - 16px);
+
+  padding: 0.5rem 0.5rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  background-color: #1f2937;
+  color: white;
+  height: 35px;
+}
+.content-profile > svg {
+  background-color: rgb(255, 255, 255);
+  padding: 2px;
+  border-radius: 6px;
+  width: 22px;
+}
+.content-profile-text-divider {
+  color: rgb(163, 163, 163);
 }

@@ -1,6 +1,6 @@
-import { FC, SVGProps } from "react";
+import { SVGIconProps } from "@/types/ui.type";
 
-const GoogleIcon: FC<SVGProps<SVGSVGElement>> = (svgProps) => {
+const GoogleIcon: SVGIconProps = (svgProps) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" {...svgProps}>
       <path

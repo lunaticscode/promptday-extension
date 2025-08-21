@@ -1,4 +1,4 @@
-import OauthWidget from "@/components/widgets/OauthWidget";
+import OauthWidget from "@/components/widgets/popup/OauthWidget";
 import "./App.css";
 import { ErrorBoundary } from "react-error-boundary";
 import PopupErrorFallback from "@/components/features/error/PopoupErrorFallback";

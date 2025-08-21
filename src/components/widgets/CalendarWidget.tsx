@@ -25,7 +25,7 @@ const CalendarWidget = () => {
   });
   const setupCalendarList = async () => {
     const calendarList = await getCalendarList(provider);
-    console.log(calendarList);
+    // console.log(calendarList);
     if (calendarList) {
       preservedCalendarList.current[provider] = true;
       setCalendarListMap((prev) => ({ ...prev, [provider]: calendarList }));

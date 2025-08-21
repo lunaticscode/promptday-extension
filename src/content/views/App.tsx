@@ -6,8 +6,15 @@ import ContentContainer from "./ContentContainer";
 function App() {
   const [show, setShow] = useState(false);
   const toggle = () => setShow(!show);
+  const setupSigninSignalListerner = () => {
+    chrome.runtime.onMessage.addListener((msg) => {
+      if (msg.type === "signin-signal" && msg.isSignin) {
+        setShow(true);
+      }
+    });
+  };
   useEffect(() => {
-    console.log("App Mounted");
+    setupSigninSignalListerner();
   }, []);
   return (
     <div className="popup-container">

@@ -14,7 +14,6 @@ type CalendarMessage = {
 const GOOGLE_CALENDAR_API_BASE_URL = "https://www.googleapis.com/calendar/v3";
 
 const getCalendarListFromGoogle = async () => {
-  console.log("getCalendarListFromGoogle");
   try {
     const token = await getAuthToken();
     const request = await fetch(
@@ -76,7 +75,7 @@ const setupContextMenu = () => {
   chrome.contextMenus.onClicked.addListener(async (info) => {
     if (info.menuItemId === "add-to-lang-calendar" && info.selectionText) {
       // TODO: Electron Native Messaging으로 전달
-      console.log("Selected text:", info.selectionText);
+
       // 예시: Native Messaging 준비를 위해 백그라운드에서 저장
       chrome.tabs.query({}, (tabs) => {
         tabs.forEach((tab) => {
@@ -153,6 +152,6 @@ export const getCalendarEvents = async (
     id,
   });
   const { data } = response;
-  console.log(data);
+
   return data;
 };

@@ -1,5 +1,5 @@
-import GoogleOauth from "../features/oauth/google";
-import useAuthStatus from "../hooks/useAuthStatus";
+import GoogleOauth from "../../features/oauth/google";
+import useAuthStatus from "../../hooks/useAuthStatus";
 
 const OauthWidget = () => {
   const { isAuth, isLoading } = useAuthStatus();

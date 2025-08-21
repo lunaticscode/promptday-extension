@@ -1,4 +1,5 @@
 import { OauthProviders } from "@/types/oauth.type";
+import { AppError } from "@/utils/error";
 
 type OauthMessageTypes = "signin" | "get_profile" | "signout" | "auth-status";
 
@@ -8,20 +9,24 @@ type OauthMessage = {
 };
 
 export function getAuthToken(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    chrome.identity.getAuthToken({ interactive: true }, (token) => {
-      if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError.message);
-        return;
+  return new Promise((resolve) => {
+    chrome.identity.getAuthToken({ interactive: true }, async (token) => {
+      if (!token || chrome.runtime.lastError) {
+        if (chrome.runtime.lastError) {
+          console.error(chrome.runtime.lastError?.message);
+        }
+        throw new AppError("api", "INVALID_GOOGLE_OAUTH_TOKEN");
       }
       // GetAuthToken 타입과 맞지 않음.
+      await chrome.storage.local.set({ token });
       resolve(token as string);
     });
   });
 }
 
 async function getSavedProfileData() {
-  return await new Promise((resolve) => {
+  return await new Promise(async (resolve) => {
+    await getAuthToken();
     return chrome.storage.local
       .get("profile")
       .then((profile) => {
@@ -55,18 +60,19 @@ chrome.runtime.onMessage.addListener(
           return sendResponse({ ok: false, profile: null });
         }
 
-        if (msg.type === "signin") {
-          const token = await getAuthToken();
-          sendResponse({ ok: true, token });
-          return;
-        }
-
         if (msg.type === "get_profile") {
+          // authToken + signin + profile
           const token = await getAuthToken(); // 필요 시 자동 갱신/발급
           const profile = await fetchGoogleUserinfo(token);
           const provider = msg.provider;
+          const saveProfileData = {
+            email: profile.email ?? "(none)",
+            name: profile.name ?? "(none)",
+            provider,
+            picture: profile.picture ?? "(none)",
+          };
           await chrome.storage.local.set({
-            profile: { ...profile, provider },
+            profile: saveProfileData,
           });
           sendResponse({ ok: true, profile });
           return;
@@ -95,7 +101,6 @@ chrome.runtime.onMessage.addListener(
 const sendSigninSignal = (isSignin: boolean) => {
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
-      console.log(tab);
       if (tab.active) {
         chrome.tabs.sendMessage(tab.id ?? 0, {
           type: "signin-signal",

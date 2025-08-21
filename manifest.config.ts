@@ -26,7 +26,7 @@ export default defineManifest({
     "storage",
     "identity.email",
   ],
-  host_permissions: ["https://www.googleapis.com/*"],
+  host_permissions: ["https://www.googleapis.com/*", "http://localhost:8088/*"],
   oauth2: {
     client_id:
       "116195706194-etcjp3qck6tqepmnpheulav7ojufau2f.apps.googleusercontent.com",

@@ -1,3 +1,4 @@
+// Popup 전용
 import { OauthProfile } from "@/types/oauth.type";
 import { FC, useEffect, useState } from "react";
 

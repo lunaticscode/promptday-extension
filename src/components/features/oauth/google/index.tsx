@@ -2,7 +2,7 @@ import { createContext, FC, useContext, useState } from "react";
 import GoogleSignin from "./GoogleSignin";
 import GoogleSignout from "./GoogleSignout";
 import { AppError } from "@/utils/error";
-import ProfileWidget from "@/components/widgets/ProfileWidget";
+import ProfileWidget from "@/components/widgets/popup/ProfileWidget";
 
 interface GoogleOauthProps {
   defaultAuth: boolean;
