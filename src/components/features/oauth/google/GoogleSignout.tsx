@@ -1,18 +1,23 @@
+import Button from "@hw-rui/button";
 import { oauthSignout } from "@/service-worker/oauth";
-import { FC } from "react";
+import { useMemo, useState } from "react";
+import { useGoogleOauthContext } from ".";
 
-interface GoogleSignoutProps {
-  onSignout: (signout: boolean) => void;
-}
-const GoogleSignout: FC<GoogleSignoutProps> = ({ onSignout }) => {
+const GoogleSignout = () => {
+  const { handleChangeSignin } = useGoogleOauthContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleGoogleSignout = async () => {
+    setIsLoading(true);
     const signoutResult = await oauthSignout("google");
-    onSignout(signoutResult);
+    handleChangeSignin(!signoutResult);
+    setIsLoading(false);
   };
+
+  const disabled = useMemo(() => isLoading, [isLoading]);
   return (
-    <>
-      <button onClick={handleGoogleSignout}>Google Signout</button>
-    </>
+    <Button disabled={disabled} onClick={handleGoogleSignout}>
+      Google Signout
+    </Button>
   );
 };
 export default GoogleSignout;

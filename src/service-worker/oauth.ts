@@ -64,8 +64,9 @@ chrome.runtime.onMessage.addListener(
         if (msg.type === "get_profile") {
           const token = await getAuthToken(); // 필요 시 자동 갱신/발급
           const profile = await fetchGoogleUserinfo(token);
+          const provider = msg.provider;
           await chrome.storage.local.set({
-            profile,
+            profile: { ...profile, provider },
           });
           sendResponse({ ok: true, profile });
           return;
@@ -91,12 +92,29 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+const sendSigninSignal = (isSignin: boolean) => {
+  chrome.tabs.query({}, (tabs) => {
+    tabs.forEach((tab) => {
+      console.log(tab);
+      if (tab.active) {
+        chrome.tabs.sendMessage(tab.id ?? 0, {
+          type: "signin-signal",
+          isSignin,
+        });
+      }
+    });
+  });
+};
+
 const oauthSignin = async (provider: OauthProviders) => {
   const signinResult = await chrome.runtime.sendMessage({
     type: "get_profile",
     provider,
   });
-  return signinResult;
+  if (signinResult.ok) {
+    sendSigninSignal(true);
+  }
+  return signinResult.ok;
 };
 
 const oauthSignout = async (provider: OauthProviders) => {
@@ -104,6 +122,9 @@ const oauthSignout = async (provider: OauthProviders) => {
     type: "signout",
     provider,
   });
+  if (signoutResult.ok) {
+    sendSigninSignal(false);
+  }
   return signoutResult.ok;
 };
 

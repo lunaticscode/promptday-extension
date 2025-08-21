@@ -1,14 +1,22 @@
+import Button from "@hw-rui/button";
 import { oauthSignin } from "@/service-worker/oauth";
-import { FC } from "react";
+import { useGoogleOauthContext } from ".";
+import { useMemo, useState } from "react";
 
-interface GoogleSigninProps {
-  onSignin: (signin: boolean) => void;
-}
-const GoogleSignin: FC<GoogleSigninProps> = ({ onSignin }) => {
+const GoogleSignin = () => {
+  const { handleChangeSignin } = useGoogleOauthContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleClickGoogleSignin = async () => {
+    setIsLoading(true);
     const signinResult = await oauthSignin("google");
-    onSignin(signinResult);
+    handleChangeSignin(signinResult);
+    setIsLoading(false);
   };
-  return <button onClick={handleClickGoogleSignin}>Google Signin</button>;
+  const disabled = useMemo(() => isLoading, [isLoading]);
+  return (
+    <Button disabled={disabled} onClick={handleClickGoogleSignin}>
+      Google Signin{isLoading && "....."}
+    </Button>
+  );
 };
 export default GoogleSignin;
