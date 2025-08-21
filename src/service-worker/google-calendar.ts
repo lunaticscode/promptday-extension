@@ -1,4 +1,4 @@
-import { AppError, handleError } from "@/utils/error";
+import { AppError, handleUnknownError } from "@/utils/error";
 import { getAuthToken } from "./oauth";
 import { CalendarProviders } from "@/types/calendar.type";
 
@@ -30,10 +30,10 @@ const getCalendarListFromGoogle = async () => {
       const response = await request.json();
       return response;
     } else {
-      throw new AppError("api", "getCalendarList error");
+      throw new AppError("api", "CALENDAR_LIST_ERROR");
     }
   } catch (err) {
-    return handleError(err);
+    return handleUnknownError(err);
   }
 };
 
@@ -55,10 +55,10 @@ const getCalendarEventsFromGoogle = async (id: string) => {
       const response = await request.json();
       return response;
     } else {
-      throw new AppError("api", "getCalendarList error");
+      throw new AppError("api", "CALENDAR_LIST_ERROR");
     }
   } catch (err) {
-    return handleError(err);
+    return handleUnknownError(err);
   }
 };
 let isSetupContextMenu = false;
@@ -69,7 +69,7 @@ const setupContextMenu = () => {
 
   chrome.contextMenus.create({
     id: "add-to-lang-calendar",
-    title: "📅 Promptday",
+    title: "📅 Promptday - Extract date",
     contexts: ["selection"],
   });
 
@@ -86,19 +86,11 @@ const setupContextMenu = () => {
           });
         });
       });
-      // chrome.runtime.sendMessage({
-      //   type: "selected-text",
-      //   text: info.selectionText,
-      // });
-      // self.postMessage({
-      //   type: "selected-text",
-      //   text: info.selectionText,
-      // });
     }
   });
 };
 
-chrome.runtime.onInstalled?.addListener((details) => {
+chrome.runtime.onInstalled?.addListener((_) => {
   setupContextMenu();
 });
 

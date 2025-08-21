@@ -1,11 +1,31 @@
 type ErrorTypes = "api" | "ui";
-class AppError extends Error {
-  message: string;
+
+type UIErrorMessages = "INVALID_UI_CONTEXT_SCOPE";
+type APIErrorMessages = "CALENDAR_LIST_ERROR";
+
+const getErrorOriginFromStack = (stack: string | undefined) => {
+  if (!stack) return null;
+  const stackLines = stack.split("\n");
+  const origin = stackLines[2]?.trim() ?? "unknown";
+  return origin;
+};
+
+class AppError<T extends ErrorTypes> extends Error {
   type: ErrorTypes;
-  constructor(type: ErrorTypes, message: string) {
+  message: string;
+  from?: string;
+  constructor(
+    type: T,
+    message: T extends "ui" ? UIErrorMessages : APIErrorMessages,
+    from?: string
+  ) {
     super();
     this.type = type;
     this.message = message;
+    this.from = from ?? getErrorOriginFromStack(this.stack) ?? "unknown";
+    const timestamp = new Date().getTime();
+    const errorMessage = `❌ Error\n[Time]: ${timestamp}\n[From]: ${this.from}\n[Message]: ${message}`;
+    console.error(errorMessage);
   }
 }
 
@@ -13,7 +33,7 @@ const formatErrorMessage = (type: ErrorTypes, message: string) => {
   return `❌${type.toUpperCase()}_ERROR :: ${message}`;
 };
 
-const handleError = (err: any) => {
+const handleUnknownError = (err: unknown) => {
   if (err instanceof AppError) {
     console.error(formatErrorMessage(err.type, err.message));
   } else {
@@ -28,4 +48,4 @@ const handleError = (err: any) => {
   }
 };
 
-export { AppError, handleError };
+export { AppError, handleUnknownError };

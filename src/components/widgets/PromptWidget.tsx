@@ -1,11 +1,5 @@
-import { CSSProperties, useEffect, useState } from "react";
-
-const selectedTextWrapper: CSSProperties = {
-  width: "100%",
-  height: "300px",
-  overflow: "auto",
-  textAlign: "left",
-};
+import { useEffect, useState } from "react";
+import Button from "@hw-rui/button";
 
 const PromptWidget = () => {
   const [selectedText, setSelectedText] = useState("");
@@ -25,7 +19,10 @@ const PromptWidget = () => {
     <>
       <h3>Prompt</h3>
       <div>
-        <textarea value={selectedText} style={selectedTextWrapper} />
+        <textarea className={"prompt-selected-text"} value={selectedText} />
+        <Button className={"prompt-submit-button"} variant="positive">
+          Extract
+        </Button>
       </div>
     </>
   );

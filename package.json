@@ -9,11 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hw-rui/button": "^0.1.5",
     "@hw-rui/calendar": "^0.1.5",
     "@hw-rui/core": "^0.1.5",
     "@hw-rui/tabs": "^0.1.5",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-error-boundary": "^6.0.0"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.3",

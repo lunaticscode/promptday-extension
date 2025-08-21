@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
-import GoogleSignin from "../features/oauth/GoogleSignin";
-import GoogleSignout from "../features/oauth/GoogleSignout";
+import GoogleOauth from "../features/oauth/google";
+import useAuthStatus from "../hooks/useAuthStatus";
 
 const OauthWidget = () => {
-  const [isAuth, setIsAuth] = useState(false);
-  const checkAuthStatus = async () => {
-    const authStatus = await chrome.runtime.sendMessage({
-      type: "auth-status",
-    });
-    // console.log({ authStatus });
-    const { ok } = authStatus;
-    setIsAuth(ok);
-  };
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
+  const { isAuth, isLoading } = useAuthStatus();
+  if (isLoading) {
+    return <h2>Check AuthStatus....</h2>;
+  }
   return (
     <div>
-      {!isAuth && <GoogleSignin />}
-      {isAuth && <GoogleSignout />}
+      {/**** google ****/}
+      <GoogleOauth defaultAuth={isAuth} />
     </div>
   );
 };

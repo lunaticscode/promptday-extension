@@ -20,14 +20,6 @@ export function getAuthToken(): Promise<string> {
   });
 }
 
-// function removeCachedAuthToken(token: string): Promise<void> {
-//   return new Promise((resolve) => {
-//     chrome.identity.removeCachedAuthToken({ token }, async () => {
-//       console.log({ token });
-//       return resolve();
-//     });
-//   });
-// }
 async function getSavedProfileData() {
   return await new Promise((resolve) => {
     return chrome.storage.local
@@ -112,7 +104,7 @@ const oauthSignout = async (provider: OauthProviders) => {
     type: "signout",
     provider,
   });
-  return signoutResult;
+  return signoutResult.ok;
 };
 
 export { oauthSignin, oauthSignout };

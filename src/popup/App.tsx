@@ -1,10 +1,12 @@
 import OauthWidget from "@/components/widgets/OauthWidget";
 import "./App.css";
+import { ErrorBoundary } from "react-error-boundary";
+import PopupErrorFallback from "@/components/features/error/PopoupErrorFallback";
 
 export default function App() {
   return (
-    <div>
+    <ErrorBoundary FallbackComponent={PopupErrorFallback}>
       <OauthWidget />
-    </div>
+    </ErrorBoundary>
   );
 }
