@@ -1,0 +1,12 @@
+.app-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #69d1ff, #8cffc7);
+  display: grid;
+  place-items: center;
+  color: #0b1320;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 10px 30px rgba(105, 209, 255, 0.25);
+}

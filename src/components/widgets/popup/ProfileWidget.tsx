@@ -22,7 +22,7 @@ const ProfileWidget: FC<ProfileWidgetProps> = ({ isSignin }) => {
     return null;
   }
   return (
-    <div>
+    <div className={"profile-container"}>
       {profile?.provider ?? "(none-provider)"} |{" "}
       {profile?.email ?? "(none-email)"}
     </div>

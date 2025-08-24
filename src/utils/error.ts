@@ -5,7 +5,8 @@ type UIErrorMessages = "INVALID_UI_CONTEXT_SCOPE";
 type APIErrorMessages =
   | "CALENDAR_LIST_ERROR"
   | "GET_USAGE_ERROR"
-  | "INVALID_GOOGLE_OAUTH_TOKEN";
+  | "INVALID_GOOGLE_OAUTH_TOKEN"
+  | "LLM_PROMPT_API_ERROR";
 
 const getErrorOriginFromStack = (stack: string | undefined) => {
   if (!stack) return null;

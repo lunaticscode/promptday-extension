@@ -1,21 +1,26 @@
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import Button from "@hw-rui/button";
 import { useContentContext } from "@/content/views/ContentContainer";
-import { getUsageFromServer } from "@/service-worker/usage";
+// import { getUsageFromServer } from "@/service-worker/usage";
+import LoadingSpinner from "@/components/shareds/LoadingSpinner";
+import useExtractDateFromPrompt from "@/components/hooks/useExtractDate";
+import PromptResult from "@/components/features/prompt/PromptResult";
+
+const selectedTextPlaceholder =
+  "1) 🖱️Drag the schedule-related content.\n2) Right Click (You will see context menus).\n3) Select '📅 Promptday - Extract date'.";
 
 const PromptWidget = () => {
   const { isSignin } = useContentContext();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { isLoading, result, extract, extraLoadingMessage } =
+    useExtractDateFromPrompt();
   const [selectedText, setSelectedText] = useState("");
 
   const extractButtonDisabled = useMemo(
-    () => !isSignin || isLoading,
-    [!isSignin || isLoading]
+    () => !isSignin || isLoading || !selectedText,
+    [!isSignin || isLoading || !selectedText]
   );
-  // console.log({ extractButtonDisabled });
 
   const setupSelectedTextListener = () => {
-    // console.log("setupSelectedTextListener");
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg.type === "selected-text") {
         const text = msg.text;
@@ -31,8 +36,8 @@ const PromptWidget = () => {
 
   const handleClickExtract = () => {
     if (extractButtonDisabled) return;
-    // console.log("handleClickExtract");
-    getUsageFromServer();
+    extract(selectedText);
+    // getUsageFromServer();
   };
 
   useEffect(() => {
@@ -40,25 +45,37 @@ const PromptWidget = () => {
   }, []);
 
   return (
-    <>
-      <h3 style={{ marginBottom: "0.5rem" }}>Target Text</h3>
-      <div>
+    <div className="prompt-area">
+      <div className="prompt-area-header">
+        <h3>Selected Text</h3>
+      </div>
+      <div className="prompt-area-selected-text">
         <textarea
           readOnly
           onChange={handleChangeText}
           className={"prompt-selected-text"}
           value={selectedText}
+          placeholder={selectedTextPlaceholder}
         />
+      </div>
+      <div className="prompt-area-submit-button">
         <Button
           disabled={extractButtonDisabled}
           onClick={handleClickExtract}
           className={"prompt-submit-button"}
           variant="positive"
         >
-          Extract
+          {isLoading ? <LoadingSpinner /> : "Extract"}
         </Button>
       </div>
-    </>
+      <div>
+        <PromptResult
+          isLoading={isLoading}
+          extraLoadingMessage={extraLoadingMessage}
+          data={result}
+        />
+      </div>
+    </div>
   );
 };
 export default PromptWidget;

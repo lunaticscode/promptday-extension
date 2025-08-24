@@ -1,5 +1,5 @@
 import Logo from "@/assets/crx.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import ContentContainer from "./ContentContainer";
 
@@ -16,18 +16,18 @@ function App() {
   useEffect(() => {
     setupSigninSignalListerner();
   }, []);
+  const MemorizedContent = useMemo(() => <ContentContainer />, []);
   return (
-    <div className="popup-container">
-      {show && (
+    <>
+      <div className={`popup-container ${!show ? "opacity-0" : ""}`.trim()}>
         <div className={`popup-content ${show ? "opacity-100" : "opacity-0"}`}>
-          <ContentContainer />
+          {MemorizedContent}
         </div>
-      )}
-
+      </div>
       <button className="toggle-button" onClick={toggle}>
         <img src={Logo} alt="Promptday logo" className="button-icon" />
       </button>
-    </div>
+    </>
   );
 }
 

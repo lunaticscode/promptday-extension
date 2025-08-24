@@ -28,10 +28,15 @@ const ContentContainer = () => {
   };
 
   return (
-    <ContentContext.Provider value={contextValue}>
-      <ProfileWidget />
-      <PromptWidget />
-    </ContentContext.Provider>
+    <>
+      <ContentContext.Provider value={contextValue}>
+        <ProfileWidget />
+        <PromptWidget />
+      </ContentContext.Provider>
+      <div className="app-footer-message">
+        © Promptday · Chrome Extension(Demo)
+      </div>
+    </>
   );
 };
 export default ContentContainer;

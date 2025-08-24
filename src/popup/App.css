@@ -4,8 +4,31 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  height: max-content;
 }
 
+.popup-logo {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+  margin-bottom: 10px;
+}
+.popup-logo > .app-logo {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+  border-radius: 10px;
+}
+.popup-logo-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+.profile-container {
+  margin-bottom: 10px;
+  color: #4ceae7aa;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
